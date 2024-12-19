@@ -17,9 +17,10 @@ const Table = ({ data, onEdit, onDelete }) => {
                         <td>{doctor.name}</td>
                         <td>{doctor.specialty}</td>
                         <td>
-                            <button onClick={() => onEdit(doctor)}>Edit</button>
+                            <button className={styles.edit}
+                            onClick={() => onEdit(doctor)}>Edit</button>
                             <button
-                                className={styles.deleteButton}
+                                className={styles.delete}
                                 onClick={() => onDelete(doctor.id)}>
                                 Delete
                             </button>

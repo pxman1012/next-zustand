@@ -1,51 +1,59 @@
-import React, { useState } from 'react';
-import styles from './DoctorForm.module.scss';  // Import CSS Module
+'use client';
 
-const DoctorForm = ({ initialValues, onSubmit }) => {
-    const [doctor, setDoctor] = useState(initialValues);
+import { useState } from 'react';
+import styles from './DoctorForm.module.scss';
+import useModalStore from '@/store/modalStore';
+
+export default function DoctorForm({ initialValues, onSubmit }) {
+    const [formValues, setFormValues] = useState(initialValues);
+    const { closeModal } = useModalStore()
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setDoctor((prevDoctor) => ({
-            ...prevDoctor,
-            [name]: value,
-        }));
+        setFormValues({ ...formValues, [name]: value });
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit(doctor);
+        onSubmit(formValues);
     };
 
     return (
-        <form onSubmit={handleSubmit} className={styles.form}>
-            <div>
-                <label htmlFor="name" className={styles.label}>Name</label>
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={doctor.name}
-                    onChange={handleChange}
-                    className={styles.inputField}
-                    required
-                />
+        <form className={styles.formContainer} onSubmit={handleSubmit}>
+            <h2>{initialValues.id ? 'Edit Doctor' : 'Add Doctor'}</h2>
+
+            <label htmlFor="name">Name</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                value={formValues.name}
+                onChange={handleChange}
+                placeholder="Enter doctor name"
+                required
+            />
+
+            <label htmlFor="specialty">Specialty</label>
+            <input
+                type="text"
+                id="specialty"
+                name="specialty"
+                value={formValues.specialty}
+                onChange={handleChange}
+                placeholder="Enter specialty"
+                required
+            />
+
+            <div className={styles.formActions}>
+                <button type="submit" className={styles.submit}>
+                    {initialValues.id ? 'Save Changes' : 'Add Doctor'}
+                </button>
+                <button type="button" className={styles.cancel}
+                    onClick={closeModal}
+                >
+                    Cancel
+                </button>
             </div>
-            <div>
-                <label htmlFor="specialty" className={styles.label}>Specialty</label>
-                <input
-                    type="text"
-                    id="specialty"
-                    name="specialty"
-                    value={doctor.specialty}
-                    onChange={handleChange}
-                    className={styles.inputField}
-                    required
-                />
-            </div>
-            <button type="submit" className={styles.submitButton}>Save</button>
         </form>
     );
-};
-
-export default DoctorForm;
+}
